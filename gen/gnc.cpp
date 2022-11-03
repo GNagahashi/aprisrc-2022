@@ -187,8 +187,11 @@ void gnc_set_destination(float x, float y, float z)
 
 void gnc_set_destination_from_file()
 {
-	static std::ifstream ifs("/home/enpit/waypoint.dat");
+	static std::ifstream ifs("/home/"+ static_cast<std::string>(std::getenv("USER")) + "/waypoint.dat");
 	static std::once_flag flag;
+	float x, y, z;
+	std::string tmp;
+
 	std::call_once
 	(
 		flag,
@@ -201,14 +204,6 @@ void gnc_set_destination_from_file()
 			}
 		}
 	);
-//	if(ifs.fail())
-//	{
-//		printf("Failed to open file.\n");
-//		std::exit(0);
-//	}
-	float x, y, z;
-	std::string tmp;
-
 	try
 	{
 		getline(ifs, tmp, ',');
