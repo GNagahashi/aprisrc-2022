@@ -10,6 +10,7 @@ extern "C"{
     int gnc_takeoff(float takeoff_alt);
     int gnc_arm();
     void gnc_set_destination(float x, float y, float z);
+    void gnc_set_destination_from_file();
     void gnc_set_heading(float heading);
     float gnc_get_heading();
     int gnc_check_waypoint_reached(float pos_tolerance, float heading_tolerance);

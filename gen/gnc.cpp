@@ -24,6 +24,8 @@
 #include <iostream>
 #include <string>
 #include <signal.h>
+#include <sstream>
+#include <fstream>
 
 /**
 \defgroup control_functions
@@ -180,6 +182,72 @@ void gnc_set_destination(float x, float y, float z)
 
 	local_pos_pub.publish(waypoint_g);
 }
+
+
+
+void gnc_set_destination_from_file()
+{
+	static std::ifstream ifs("/home/enpit/waypoint.dat");
+	static std::once_flag flag;
+	std::call_once
+	(
+		flag,
+		[]()
+		{
+			if(ifs.fail())
+			{
+				printf("Failed to open file.\n");
+				std::exit(0);
+			}
+		}
+	);
+//	if(ifs.fail())
+//	{
+//		printf("Failed to open file.\n");
+//		std::exit(0);
+//	}
+	float x, y, z;
+	std::string tmp;
+
+	try
+	{
+		getline(ifs, tmp, ',');
+		x = stof(tmp);
+		getline(ifs, tmp, ',');
+		y = stof(tmp);
+		getline(ifs, tmp, ',');
+		z = stof(tmp);
+	}
+	catch(std::exception)
+	{
+		printf("There are no coordinates(or failed to open file), move (0, 0, 1)\n");
+		x = 0.0;
+		y = 0.0;
+		z = 1.0;
+	}
+	// set_heading(psi);
+	//transform map to local
+	float deg2rad = (M_PI/180);
+	float Xlocal = x*cos((correction_heading_g + local_offset_g - 90)*deg2rad) - y*sin((correction_heading_g + local_offset_g - 90)*deg2rad);
+	float Ylocal = x*sin((correction_heading_g + local_offset_g - 90)*deg2rad) + y*cos((correction_heading_g + local_offset_g - 90)*deg2rad);
+	float Zlocal = z;
+
+	x = Xlocal + correction_vector_g.position.x + local_offset_pose_g.x;
+	y = Ylocal + correction_vector_g.position.y + local_offset_pose_g.y;
+	z = Zlocal + correction_vector_g.position.z + local_offset_pose_g.z;
+	ROS_INFO("Destination set to x: %f y: %f z: %f origin frame", x, y, z);
+
+	waypoint_g.pose.position.x = x;
+	waypoint_g.pose.position.y = y;
+	waypoint_g.pose.position.z = z;
+
+	is_waypoint_set = true;
+
+	local_pos_pub.publish(waypoint_g);
+}
+
+
+
 /**
 \ingroup control_functions
 Wait for connect is a function that will hold the program until communication with the FCU is established.

@@ -67,6 +67,16 @@ MAV_Port1_set_destination( const r_t p_x, const r_t p_y, const r_t p_z )
     gnc_set_destination(p_x, p_y, p_z);
 }
 
+
+
+void
+MAV_Port1_set_destination_from_file()
+{
+    gnc_set_destination_from_file();
+}
+
+
+
 /*
  * Interface:  mavcontrol
  * Provided Port:  Port1
