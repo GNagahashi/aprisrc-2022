@@ -54,6 +54,8 @@ ros::ServiceClient land_client;
 ros::ServiceClient set_mode_client;
 ros::ServiceClient takeoff_client;
 
+ros::Subscriber command_sub;
+
 /**
 \ingroup control_functions
 This structure is a convenient way to format waypoints
@@ -457,6 +459,19 @@ int gnc_land()
   }
 }
 
+void command_cb(const std_msgs::String::ConstPtr& msg)
+{
+	ROS_INFO("recv command: %s", msg->data.c_str());
+	if(msg->data == "start")
+	{
+		Control_start();
+	}
+	else if(msg->data == "halt")
+	{
+		Control_halt();
+	}
+}
+
 /**
 \ingroup control_functions
 This function is called at the beginning of a program and will start of the communication links to the FCU. The function requires the program's ros nodehandle as an input 
@@ -480,6 +495,8 @@ int init_publisher_subscriber(ros::NodeHandle controlnode)
 	set_mode_client = controlnode.serviceClient<mavros_msgs::SetMode>((ros_namespace + "/mavros/set_mode").c_str());
 	takeoff_client = controlnode.serviceClient<mavros_msgs::CommandTOL>((ros_namespace + "/mavros/cmd/takeoff").c_str());
 	collision_sub = controlnode.subscribe<sensor_msgs::LaserScan>("/spur/laser/scan", 1, scan_cb);
+
+	command_sub = controlnode.subscribe("cmd", 10, command_cb);  // topic name: /gnc_node/cmd
 
 	return 0;
 }

@@ -39,14 +39,53 @@ INSERT INTO S_SYNC
 	'setup',
 	'',
 	'create object instance ctrl of Controller;
+// generate Controller1:''start'' to ctrl;
+',
+	"ba5eda7a-def5-0000-0000-000000000000",
+	1,
+	'',
+	0,
+	0);
+INSERT INTO PE_PE
+	VALUES ("6da296e0-cfc3-41ea-b021-54b367d07943",
+	1,
+	"c266a8d5-aa61-43f4-9d01-7e2baedb603e",
+	"00000000-0000-0000-0000-000000000000",
+	1);
+INSERT INTO S_SYNC
+	VALUES ("8a78cfed-4368-4720-bb5c-4ddc289abce9",
+	"00000000-0000-0000-0000-000000000000",
+	'start',
+	'',
+	'select any ctrl from instances of Controller;
 generate Controller1:''start'' to ctrl;
 ',
 	"ba5eda7a-def5-0000-0000-000000000000",
 	1,
 	'',
-	0);
+	0,
+	1);
 INSERT INTO PE_PE
-	VALUES ("6da296e0-cfc3-41ea-b021-54b367d07943",
+	VALUES ("8a78cfed-4368-4720-bb5c-4ddc289abce9",
+	1,
+	"c266a8d5-aa61-43f4-9d01-7e2baedb603e",
+	"00000000-0000-0000-0000-000000000000",
+	1);
+INSERT INTO S_SYNC
+	VALUES ("68c784d8-0aaa-4a81-9a86-bc30659a77df",
+	"00000000-0000-0000-0000-000000000000",
+	'halt',
+	'',
+	'select any ctrl from instances of Controller;
+generate Controller3:''halt'' to ctrl;
+',
+	"ba5eda7a-def5-0000-0000-000000000000",
+	1,
+	'',
+	0,
+	2);
+INSERT INTO PE_PE
+	VALUES ("68c784d8-0aaa-4a81-9a86-bc30659a77df",
 	1,
 	"c266a8d5-aa61-43f4-9d01-7e2baedb603e",
 	"00000000-0000-0000-0000-000000000000",
@@ -66,6 +105,7 @@ INSERT INTO C_C_PROXY
 	0,
 	"00000000-0000-0000-0000-000000000000",
 	0,
+	'',
 	'',
 	'../Control.xtuml');
 INSERT INTO S_SYS_PROXY
