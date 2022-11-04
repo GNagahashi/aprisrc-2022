@@ -12,6 +12,8 @@ This repository is using following template:
 This is team4.  
 This repository is prototype for drone control program.
 
+**Remember to change your name from `aprisrc-2022` to `gnc` when you clone!**
+
 example of drone control:
 1. you must copy `waypoint.dat` in this repository to `/home/$USER`  
 (e.g. `cp ./wayposint.dat ~/`)

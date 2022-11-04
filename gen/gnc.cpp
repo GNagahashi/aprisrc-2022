@@ -533,6 +533,10 @@ void command_cb(const std_msgs::String::ConstPtr& msg)
 	{
 		Control_halt();
 	}
+	else if(msg->data == "backhome")
+	{
+		Control_backhome();
+	}
 }
 
 /**

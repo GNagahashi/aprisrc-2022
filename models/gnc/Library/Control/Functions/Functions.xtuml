@@ -90,6 +90,25 @@ INSERT INTO PE_PE
 	"c266a8d5-aa61-43f4-9d01-7e2baedb603e",
 	"00000000-0000-0000-0000-000000000000",
 	1);
+INSERT INTO S_SYNC
+	VALUES ("063adb84-fe27-4c71-a2f4-2f6257ddf617",
+	"00000000-0000-0000-0000-000000000000",
+	'backhome',
+	'',
+	'select any ctrl from instances of Controller;
+generate Controller4:''backhome'' to ctrl;
+',
+	"ba5eda7a-def5-0000-0000-000000000000",
+	1,
+	'',
+	0,
+	3);
+INSERT INTO PE_PE
+	VALUES ("063adb84-fe27-4c71-a2f4-2f6257ddf617",
+	1,
+	"c266a8d5-aa61-43f4-9d01-7e2baedb603e",
+	"00000000-0000-0000-0000-000000000000",
+	1);
 INSERT INTO PE_PE
 	VALUES ("c266a8d5-aa61-43f4-9d01-7e2baedb603e",
 	1,
