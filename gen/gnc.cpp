@@ -527,11 +527,16 @@ void command_cb(const std_msgs::String::ConstPtr& msg)
 	ROS_INFO("recv command: %s", msg->data.c_str());
 	if(msg->data == "start")
 	{
+		set_mode("GUIDED");
 		Control_start();
 	}
 	else if(msg->data == "halt")
 	{
 		Control_halt();
+	}
+	else if(msg->data == "next")
+	{
+		Control_next();
 	}
 	else if(msg->data == "backhome")
 	{
