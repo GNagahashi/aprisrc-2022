@@ -187,25 +187,33 @@ void gnc_set_destination(float x, float y, float z)
 
 void gnc_set_destination_from_file()
 {
+	geometry_msgs::Point current_pos = get_current_location();  // current drone position
+	// the file recording the destination (waypoint.dat) must be located in the home directory
 	static std::ifstream ifs("/home/"+ static_cast<std::string>(std::getenv("USER")) + "/waypoint.dat");
 	static std::once_flag flag;
-	float x, y, z;
+	float x, y, z;  // destination
 	std::string tmp;
 
+	// this lamda function is execute once
 	std::call_once
 	(
 		flag,
 		[]()
 		{
+			// if file could not be opened, the program terminates
 			if(ifs.fail())
 			{
 				printf("Failed to open file.\n");
 				std::exit(0);
 			}
+			std::string c;
+			getline(ifs, c, ':');  // first line is throw away
 		}
 	);
 	try
 	{
+		// read destination from waipoint.dat
+		// stof(): cast from string to float
 		getline(ifs, tmp, ',');
 		x = stof(tmp);
 		getline(ifs, tmp, ',');
@@ -215,11 +223,16 @@ void gnc_set_destination_from_file()
 	}
 	catch(std::exception)
 	{
-		printf("There are no coordinates(or failed to open file), move (0, 0, 1)\n");
-		x = 0.0;
-		y = 0.0;
-		z = 1.0;
+		// if any errors occur (in many cases, if there are no coordinates to read),
+		// the drone does not move from current position
+		ROS_INFO("There are no coordinates, the drone does not move from current position");
+		x = std::floor(current_pos.x);
+		y = std::floor(current_pos.y);
+		z = std::floor(current_pos.z);
+		ROS_INFO("(x, y, z) = (%f, %f, %f)", x, y, z);
 	}
+	// the following source code is the same as gnc_set_destination()
+
 	// set_heading(psi);
 	//transform map to local
 	float deg2rad = (M_PI/180);
@@ -527,6 +540,10 @@ void command_cb(const std_msgs::String::ConstPtr& msg)
 	ROS_INFO("recv command: %s", msg->data.c_str());
 	if(msg->data == "start")
 	{
+		// maybe just set_mode("GUIDED") will work,
+		// but specify set_mode("STABILIZE") and gnc_arm()
+		set_mode("STABILIZE");
+		gnc_arm();
 		set_mode("GUIDED");
 		Control_start();
 	}
